@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Block Reels, Shorts, and Facebook Gaming",
+    "version": "1.1",
+    "description": "Blocks Instagram Reels, YouTube Shorts, and Facebook Gaming even in SPAs.",
+    "permissions": [
+      "declarativeNetRequest",
+      "declarativeNetRequestWithHostAccess",
+      "scripting"
+    ],
+    "host_permissions": [
+      "*://www.instagram.com/*",
+      "*://www.youtube.com/*",
+      "*://www.facebook.com/*",
+      "*://x.com/*"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["*://www.instagram.com/*", "*://www.youtube.com/*", "*://www.facebook.com/*", "*://x.com/*"],
+        "js": ["content-script.js"],
+        "run_at": "document_idle"
+      }
+    ]
+  }
+  
