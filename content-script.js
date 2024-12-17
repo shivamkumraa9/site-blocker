@@ -3,8 +3,9 @@ function blockReelsOrShorts() {
 
     if (currentUrl.includes('instagram.com/reels')) {
         document.querySelector('body').innerHTML = '';
-    } else if (currentUrl.includes('instagram.com/')) {
-        document.querySelector('.x1nhvcw1').innerHTML = ''
+    } else if (currentUrl.includes('instagram.com/') && window.location.pathname === '/') {
+        let element = document.querySelector('.x1nhvcw1')
+        if (element) element.innerHTML = '';
     }
 
     if (currentUrl.includes('youtube.com/shorts')) {
@@ -19,7 +20,8 @@ function blockReelsOrShorts() {
     if (currentUrl.includes('facebook.com/gaming')) {
         document.querySelector('body').innerHTML = '';
     }  else if (currentUrl.includes('facebook.com/')) {
-        document.querySelector('.x1unhpq9').innerHTML = ''
+        let element = document.querySelector('.x1unhpq9')
+        if (element) element.innerHTML = '';
     }
 }
 
