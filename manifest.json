@@ -17,7 +17,7 @@
     "content_scripts": [
       {
         "matches": ["*://www.instagram.com/*", "*://www.youtube.com/*", "*://www.facebook.com/*", "*://x.com/*"],
-        "js": ["content-script.js"],
+        "js": ["new.js"],
         "run_at": "document_idle"
       }
     ]

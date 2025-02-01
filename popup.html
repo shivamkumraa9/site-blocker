@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <body style="width: 300px; padding: 15px">
+    <h2>Usage Data</h2>
+    <pre id="data"></pre>
+    <button id="clear">Clear Data</button>
+
+    <script>
+      function showDebugPanel() {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        const panel = document.createElement("div");
+
+        panel.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px;
+    border: 2px solid #ccc;
+    z-index: 9999;
+    max-height: 300px;
+    overflow-y: auto;
+  `;
+
+        panel.innerHTML = `
+    <h3>Usage Data</h3>
+    <pre>${JSON.stringify(data)}</pre>
+  `;
+
+        document.body.appendChild(panel);
+      }
+
+      // Trigger with Ctrl+Shift+D
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === "D") {
+          showDebugPanel();
+        }
+      });
+    </script>
+  </body>
+</html>
