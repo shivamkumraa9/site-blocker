@@ -1,127 +1,44 @@
-// ========================
-// Configuration
-// ========================
-const SITE_SETTINGS = {
-  "www.instagram.com": {
-    timeLimit: 2 * 60 * 1000, // 2 minutes
-    subUrls: {
-      "/reels": { action: "clearBody" },
-      "/": {
-        action: "hideElements",
-        selectors: [".x1nhvcw1"],
-      },
-    },
-  },
-  "youtube.com": {
-    timeLimit: 2 * 60 * 1000,
-    subUrls: {
-      "/shorts": {
-        action: "clearBody",
-        redirect: "about:blank",
-      },
-    },
-  },
-  "x.com": {
-    timeLimit: 2 * 60 * 1000,
-  },
-  "facebook.com": {
-    timeLimit: 2 * 60 * 1000,
-    subUrls: {
-      "/gaming": { action: "clearBody" },
-      "/": {
-        action: "hideElements",
-        selectors: [".x1unhpq9"],
-      },
-    },
-  },
-};
+function blockReelsOrShorts() {
+  const currentUrl = window.location.href;
 
-const STORAGE_KEY = "site_usage_data";
+  if (currentUrl.includes('instagram.com/reels')) {
+      document.querySelector('body').innerHTML = '';
+  } else if (currentUrl.includes('instagram.com/') && window.location.pathname === '/') {
+      let element = document.querySelector('.x1nhvcw1')
+      if (element) element.innerHTML = '';
+  }
 
-// ========================
-// Core Functionality
-// ========================
-function enforceContentRestrictions() {
-  const currentHost = window.location.hostname;
-  const currentPath = window.location.pathname;
-  const settings = SITE_SETTINGS[currentHost];
+  if (currentUrl.includes('youtube.com/shorts')) {
+      document.querySelector('body').innerHTML = '';
+      // window.location.href = "about:blank";
+  }
 
-  if (!settings) return;
+  if (currentUrl.includes('x.com')) {
+      document.querySelector('body').innerHTML = '';
+  }
 
-  // Handle sub-url specific rules
-  if (settings.subUrls) {
-    const subUrlConfig = settings.subUrls[currentPath];
-    if (subUrlConfig) handleAction(subUrlConfig);
-
-    Object.keys(settings.subUrls).forEach((path) => {
-      if (currentPath.includes(path)) {
-        handleAction(settings.subUrls[path]);
-      }
-    });
+  if (currentUrl.includes('facebook.com/gaming')) {
+      document.querySelector('body').innerHTML = '';
+  }  else if (currentUrl.includes('facebook.com/')) {
+      let element = document.querySelector('.x1unhpq9')
+      if (element) element.innerHTML = '';
   }
 }
 
-function handleAction(config) {
-  switch (config.action) {
-    case "clearBody":
-      document.body.innerHTML = "";
-      if (config.redirect) window.location.href = config.redirect;
-      break;
+function blockSites() {
+  const currentUrl = window.location.href;
 
-    case "hideElements":
-      config.selectors.forEach((selector) => {
-        const element = document.querySelector(selector);
-        if (element) element.innerHTML = "";
-      });
-      break;
+  const sites = ['facebook.com', 'x.com', 'youtube.com', 'instagram.com']
+  for (let i = 0; i < sites.length; i++) {
+    let site = sites[i];
+    if (currentUrl.includes(site)) document.querySelector('body').innerHTML = '';
+
   }
+
+  if (currentUrl.includes('youtube.com/shorts')) document.querySelector('body').innerHTML = '';
 }
 
-// ========================
-// Usage Tracking
-// ========================
-function trackSiteUsage() {
-  console.log('I am called')
-  const currentHost = window.location.hostname;
-  const settings = SITE_SETTINGS[currentHost];
+const observer = new MutationObserver(blockSites);
 
-  if (!settings) return;
-
-  const today = new Date().toISOString().split("T")[0];
-  let storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-
-  // Initialize storage
-  storedData[currentHost] = storedData[currentHost] || {};
-  storedData[currentHost][today] = storedData[currentHost][today] || 0;
-
-  let startTime = Date.now();
-
-  const updateTracker = () => {
-    const elapsed = Date.now() - startTime;
-    storedData[currentHost][today] += elapsed;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
-
-    if (storedData[currentHost][today] >= settings.timeLimit) {
-      document.body.innerHTML = "<h1>Access Blocked</h1>";
-      clearInterval(intervalId);
-      return
-    }
-
-    startTime = Date.now();
-  };
-  updateTracker()
-  const intervalId = setInterval(updateTracker, 60000);
-  window.addEventListener("beforeunload", () => {
-    // updateTracker();
-    clearInterval(intervalId);
-  });
-}
-
-new MutationObserver(enforceContentRestrictions).observe(document, {
-  subtree: true,
-  childList: true,
-});
-
-enforceContentRestrictions();
-
-trackSiteUsage();
+observer.observe(document, { subtree: true, childList: true });
+blockSites();
