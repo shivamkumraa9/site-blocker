@@ -12,11 +12,12 @@
       "*://www.instagram.com/*",
       "*://www.youtube.com/*",
       "*://www.facebook.com/*",
-      "*://x.com/*"
+      "*://x.com/*",
+      "*://www.snapchat.com/*"
     ],
     "content_scripts": [
       {
-        "matches": ["*://www.instagram.com/*", "*://www.youtube.com/*", "*://www.facebook.com/*", "*://x.com/*"],
+        "matches": ["*://www.instagram.com/*", "*://www.youtube.com/*", "*://www.facebook.com/*", "*://x.com/*", "*://www.snapchat.com/*"],
         "js": ["content-script.js"],
         "run_at": "document_idle"
       }
